@@ -92,7 +92,7 @@ Individual masks were thresholded to a floating point image where each pixel was
 
 ![alt text][image7]
 
-#### 5. Mask Region of Intrest
+#### 5. Mask Region of Interest
 
 A custom polygon was created to exclude pixels outside the road.
 ![alt text][image8]
@@ -102,7 +102,7 @@ A custom polygon was created to exclude pixels outside the road.
 
 A perspective transform was used to rectify the binary image. This attempts to transform pixels in the source image to remove the effects of camera perspective such that parallel lines in the world result in parallel image lines.
 
-To accomplish this, a custom polygon was chosen which matched the lane lines in the perspective view. Then a second polgon was chosen as the destination space. This was more rectangular, but not perfectly so. The OpenCV function `cv2.getPerspectiveTransform()` was used to calculate the matrix. And `cv2.warpPerspective()` was used to apply the matrix to the image.
+To accomplish this, a custom polygon was chosen which matched the lane lines in the perspective view. Then a second polygon was chosen as the destination space. This was more rectangular, but not perfectly so. The OpenCV function `cv2.getPerspectiveTransform()` was used to calculate the matrix. And `cv2.warpPerspective()` was used to apply the matrix to the image.
 
 ![alt text][image10]
 
@@ -148,11 +148,11 @@ The different color spaces each afforded unique information in determining lane 
 
 The inverse perspective transform was quite successful at creating a linear space for lane determination, but assumes a level road and needs additional parameters to handle slopes.
 
-I enjoyed creating the custom convolutional kernel, and it was quite powerful at targeting strong image features such as long continuous diagonals. These are the kind of kernels that are learned automatically via deep learning techniques using convolutional layers. I attempted to create a [semantic segmentation artifical neural network](https://github.com/tawnkramer/KerasSemSeg) to detect lane line pixels, but ran out of time. I used [my Unity simulator](https://github.com/tawnkramer/sdsandbox) to create perfectly annotated images. 
+I enjoyed creating the custom convolutional kernel, and it was quite powerful at targeting strong image features such as long continuous diagonals. These are the kind of kernels that are learned automatically via deep learning techniques using convolutional layers. I attempted to create a [semantic segmentation artificial neural network](https://github.com/tawnkramer/KerasSemSeg) to detect lane line pixels, but ran out of time. I used [my Unity simulator](https://github.com/tawnkramer/sdsandbox) to create perfectly annotated images. 
 
 ![alt text][image17]
 
-I then tried two different approaches, [here](https://github.com/shekkizh/FCN.tensorflow) and [here](https://github.com/aurora95/Keras-FCN), to semantic segmentation. These were quite large networks that required enormous amounts of time. I ran these overnight on AWS EC2 K80 P2 Large instances. Each time the resulting image was not segmented at all. Due to time constraints, I will continue this on my own time.
+I then tried two different approaches, [here](https://github.com/shekkizh/FCN.tensorflow) and [here](https://github.com/aurora95/Keras-FCN), to semantic segmentation. These were quite large networks that required enormous amounts of time to train. I ran these overnight on AWS EC2 K80 P2 Large instances. Each time the resulting image was not segmented at all. Due to time constraints, I will continue this on my own time.
 
 
 
