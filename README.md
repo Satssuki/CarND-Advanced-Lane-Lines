@@ -39,6 +39,7 @@ Video file is available [here](https://github.com/tawnkramer/CarND-Advanced-Lane
 [image13]: ./examples/result_1.png "result_1"
 [image14]: ./examples/result_2.png "result_2"
 [image15]: ./examples/result_3.png "result_3"
+[image16]: ./output_images/test3.jpg "lane_info"
 
 ### Source Code
 All source code can be viewed in the python notebook file [AdvancedLaneFinding.ipynb](https://github.com/tawnkramer/CarND-Advanced-Lane-Lines/blob/master/AdvancedLaneFinding.ipynb) or in python source [here](https://github.com/tawnkramer/CarND-Advanced-Lane-Lines/tree/master/src).
@@ -84,17 +85,16 @@ Here are examples of resulting masks:
 An experiment to use Sobel gradients did not result in useful information, and was ultimately discarded. Here's an example of that filter.
 ![alt text][image9]
 
-#### 4. Mask Region of Intrest
-
-A custom polygon was created to exclude pixels outside the road.
-![alt text][image8]
-
-#### 5. Combined Masks
+#### 4. Combined Masks
 
 Individual masks were thresholded to a floating point image where each pixel was either 0 or 0.1. Then the masks were added together and all pixels with two or more contributions were used. Here the full image is shown without the region of interest applied.
 
 ![alt text][image7]
 
+#### 5. Mask Region of Intrest
+
+A custom polygon was created to exclude pixels outside the road.
+![alt text][image8]
 
 
 #### 6. Perspective Transform
@@ -107,7 +107,8 @@ To accomplish this, a custom polygon was chosen which matched the lane lines in 
 
 #### 7. Identify Lane Pixels with Histogram
 
-I created a histogram of pixels at the edge of image. Then the two largest regions to the right and left of centerline were taken as the starting lane positions.
+I created a histogram of pixels at each column of the image. Then the two largest regions to the right and left of centerline were taken as the starting lane positions.
+
 ![alt text][image11a]
 
 This histogram was moved in progressive bounding boxes up the image. The bounding box was adjusted to the center of the detected lane position. This gives it continuity. Here's the example of the binary mask and resulting walk of the image showing the bounding boxes at each step.
@@ -128,4 +129,13 @@ The resulting curves were transformed back into the original image space using t
 ![alt text][image14]
 ![alt text][image15]
 
+#### 10. Lane Curvature and Deviation
+
+The curves were transform from pixel space to world space using assumed lane width of 3.7 m and view distance polygon of 20 m. This curve was sampled at the bottom edge closest to the car at both lane lines. The curvature was taken as the derivative of the curve function at that point, and the values averaged to determine a radius.
+
+The deviation, or lane position, was calculated by using the same pixel to world space transform. It assumed the camera was mounted at the center of the car, and thus determined the center X offset from the lane positions.
+
+Here's an example showing lane info and curvature overlay:
+
+![alt text][image16]
 
