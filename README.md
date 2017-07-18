@@ -1,17 +1,6 @@
 ## Advanced Lane Finding
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-
-In this project, your goal is to write a software pipeline to identify the lane boundaries in a video, but the main output or product we want you to create is a detailed writeup of the project.  Check out the [writeup template](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup.  
-
-Creating a great writeup:
----
-A great writeup should include the rubric points as well as your description of how you addressed each point.  You should include a detailed description of the code used in each step (with line-number references and code snippets where necessary), and links to other supporting documents or external references.  You should include images in your writeup to demonstrate how your code works with examples.  
-
-All that said, please be concise!  We're not looking for you to write a book here, just a brief description of how you passed each rubric point, and references to the relevant code :). 
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup.
-
 The Project
 ---
 
@@ -26,10 +15,44 @@ The goals / steps of this project are the following:
 * Warp the detected lane boundaries back onto the original image.
 * Output visual display of the lane boundaries and numerical estimation of lane curvature and vehicle position.
 
-The images for camera calibration are stored in the folder called `camera_cal`.  The images in `test_images` are for testing your pipeline on single frames.  If you want to extract more test images from the videos, you can simply use an image writing method like `cv2.imwrite()`, i.e., you can read the video in frame by frame as usual, and for frames you want to save for later you can write to an image file.  
+## Final Result Video
 
-To help the reviewer examine your work, please save examples of the output from each stage of your pipeline in the folder called `ouput_images`, and include a description in your writeup for the project of what each image shows.    The video called `project_video.mp4` is the video your pipeline should work well on.  
+[![IMAGE ALT TEXT](https://img.youtube.com/vi/_tIMUhJ2D54/0.jpg)](https://www.youtube.com/watch?v=_tIMUhJ2D54 "Advanced Lane Finding Video.")
 
-The `challenge_video.mp4` video is an extra (and optional) challenge for you if you want to test your pipeline under somewhat trickier conditions.  The `harder_challenge.mp4` video is another optional challenge and is brutal!
+Video file is available [here](https://github.com/tawnkramer/CarND-Advanced-Lane-Lines/blob/master/project_video_out.mp4).
 
-If you're feeling ambitious (again, totally optional though), don't stop there!  We encourage you to go out and take video of your own, calibrate your camera and show us how you would implement this project from scratch!
+[//]: # (Image References)
+
+[image1]: ./examples/undistort.png "Undistorted"
+[image2]: ./examples/hls.png "hls"
+[image3]: ./examples/rgb.png "rgb"
+[image4]: ./examples/yuv.png "yuv"
+[image5]: ./examples/custom_kernel_source.png "kernel_source"
+[image6]: ./examples/custom_kernel.png "kernel_img"
+[image7]: ./examples/combined_masks.png "combined"
+[image8]: ./examples/thresholding_results.png "thresh_res"
+[image9]: ./examples/sobel_gradients.png "sobel"
+[image10]: ./examples/persp_transform.png "persp"
+[image11]: ./examples/histogram_walk.png "histogram"
+[image12]: ./examples/polynomial.png "polynomial"
+[image13]: ./examples/result_1.png "result_1"
+[image14]: ./examples/result_2.png "result_2"
+[image15]: ./examples/result_3.png "result_3"
+
+![alt text][image1]
+![alt text][image2]
+![alt text][image3]
+![alt text][image4]
+![alt text][image5]
+![alt text][image6]
+![alt text][image7]
+![alt text][image8]
+![alt text][image9]
+![alt text][image10]
+![alt text][image11]
+![alt text][image12]
+![alt text][image13]
+![alt text][image14]
+![alt text][image15]
+
+
