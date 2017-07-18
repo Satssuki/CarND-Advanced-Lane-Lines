@@ -33,7 +33,8 @@ Video file is available [here](https://github.com/tawnkramer/CarND-Advanced-Lane
 [image8]: ./examples/thresholding_results.png "thresh_res"
 [image9]: ./examples/sobel_gradients.png "sobel"
 [image10]: ./examples/persp_transform.png "persp"
-[image11]: ./examples/histogram_walk.png "histogram"
+[image11a]: ./examples/histogram.png "histogram"
+[image11]: ./examples/histogram_walk.png "histogram_walk"
 [image12]: ./examples/polynomial.png "polynomial"
 [image13]: ./examples/result_1.png "result_1"
 [image14]: ./examples/result_2.png "result_2"
@@ -90,7 +91,7 @@ A custom polygon was created to exclude pixels outside the road.
 
 #### 5. Combined Masks
 
-Individual masks were thresholded to a floating point image where each pixel was either 0 or 0.1. Then the masks were added together and all pixels with two or more contributions were used.
+Individual masks were thresholded to a floating point image where each pixel was either 0 or 0.1. Then the masks were added together and all pixels with two or more contributions were used. Here the full image is shown without the region of interest applied.
 
 ![alt text][image7]
 
@@ -103,8 +104,26 @@ A perspective transform was used to rectify the binary image. This attempts to t
 To accomplish this, a custom polygon was chosen which matched the lane lines in the perspective view. Then a second polgon was chosen as the destination space. This was more rectangular, but not perfectly so. The OpenCV function `cv2.getPerspectiveTransform()` was used to calculate the matrix. And `cv2.warpPerspective()` was used to apply the matrix to the image.
 
 ![alt text][image10]
+
+#### 7. Identify Lane Pixels with Histogram
+
+I created a histogram of pixels at the edge of image. Then the two largest regions to the right and left of centerline were taken as the starting lane positions.
+![alt text][image11a]
+
+This histogram was moved in progressive bounding boxes up the image. The bounding box was adjusted to the center of the detected lane position. This gives it continuity. Here's the example of the binary mask and resulting walk of the image showing the bounding boxes at each step.
+
 ![alt text][image11]
+
+#### 8. Fit Polynomial
+
+A second order polynomial in the Y axis was fit to the resulting lane points using `numpy.polyfit`. Here's an image displaying the resulting curve overlayed over the binary mask.
+
 ![alt text][image12]
+
+#### 9. Inverse Perspective Transform
+
+The resulting curves were transformed back into the original image space using the inverse of the matrix which went to linear space. Then the curved green polygon was overlayed over the original lane image. Here are three results:
+
 ![alt text][image13]
 ![alt text][image14]
 ![alt text][image15]
