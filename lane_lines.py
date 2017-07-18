@@ -314,6 +314,18 @@ def get_lane_overlay(warped, left_lane, right_lane, invM, orig_image_shape):
     
     return newwarp
 
+def update_two_lines(warped, left_lane, right_lane):
+    '''
+    a more efficient update of lanes using last known good fit
+    to speed search
+    '''
+    left_lane.current_fit, right_lane.current_fit = update_walk_lines(
+        warped, 
+        left_lane.current_fit, 
+        right_lane.current_fit)
+
+    return left_lane, right_lane
+    
 # Assume you now have a new warped binary image 
 # from the next frame of video (also called "binary_warped")
 # It's now much easier to find line pixels!
@@ -364,3 +376,6 @@ def update_walk_lines(binary_warped, left_fit, right_fit, debug=False):
         plt.plot(right_fitx, ploty, color='yellow')
         plt.xlim(0, 1280)
         plt.ylim(720, 0)
+
+    return left_fit, right_fit
+

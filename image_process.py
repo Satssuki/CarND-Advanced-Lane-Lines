@@ -51,6 +51,47 @@ def diag_masks(img):
     return diagRth, diagLth
 
 
+def color_thresold_challenge(img):
+    '''
+    --tuned to values of the challenge video.. still not working well.
+    take an BGR image
+    splits the image into RGB, HLS, and YUV color spaces
+    then applies custom thresholding to get certain parts of image
+    then combines the masks into a single mask which we feel is most
+    likely to contain lane lines
+    '''
+    hls = cv2.cvtColor(img, cv2.COLOR_BGR2HLS)
+    H, L, S = cv2.split(hls)
+    
+    thresh = (80, 255)
+    S = thresh_mask(S, thresh)
+
+    rgb = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
+    R, G, B = cv2.split(rgb)
+
+    thresh = (165, 255)
+    R = thresh_mask(R, thresh)
+
+    thresh = (165, 255)
+    G = thresh_mask(G, thresh)
+
+    thresh = (165, 255)
+    B = thresh_mask(B, thresh)
+    
+    yuv = cv2.cvtColor(img,cv2.COLOR_BGR2YUV)
+    Y, U, V = cv2.split(yuv)
+
+    thresh = (50, 100)
+    U = thresh_mask(U, thresh)
+    
+    thresh = (150, 255)
+    V = thresh_mask(V, thresh)
+    
+    DR, DL = diag_masks(img)
+    
+    return combine_masks(S, U, V, R, G, B, DL, DR)
+
+
 def color_thresold(img):
     '''
     take an BGR image

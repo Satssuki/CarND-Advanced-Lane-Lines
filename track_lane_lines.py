@@ -12,17 +12,66 @@ from moviepy.editor import VideoFileClip
 class LineProcessor():
     def __init__(self, cam):
         self.cam = cam
+        self.left_lane = None
+        self.right_lane = None
 
     def process(self, image):
         '''
         take as input the image
         returns processed image
         '''
-        result = process_lane_lines(image, self.cam)
+        result = self.process_lane_lines(image, self.cam)
 
         result = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)       
 
         return result
+
+    def process_lane_lines(self, img, camera):
+        orig_image_shape = img.shape[:2]
+        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        
+        '''
+        do color thresh and reverse perspective transform
+        '''
+        warped, M, invM = image_process.undist_thresh_rev_proj(img, camera, debug=False)
+
+
+        '''
+        fit the left and right polynomial lines
+        '''
+        if self.left_lane is not None and self.right_lane is not None:
+            self.left_lane, self.right_lane = lane_lines.update_two_lines(
+                warped, self.left_lane, self.right_lane)
+        else:
+            self.left_lane, self.right_lane = lane_lines.discover_two_lines(warped)
+
+
+        '''
+        create an image overlay of lines
+        '''
+        newwarp = lane_lines.get_lane_overlay(warped, 
+                    self.left_lane, 
+                    self.right_lane, 
+                    invM, 
+                    orig_image_shape)
+        
+
+        '''
+        Combine the result with the original image
+        '''
+        result = cv2.addWeighted(rgb, 1, newwarp, 0.3, 0)
+
+        '''
+        write the lane position and curvature over image
+        '''
+        lane_lines.write_lane_info(self.left_lane, 
+                    self.right_lane,
+                    result,
+                    warped.shape)
+                    
+        
+        return result
+
 
 
 def get_camera(camera_pickle_filename):
@@ -48,50 +97,8 @@ def get_camera(camera_pickle_filename):
     return camera
 
 
-def process_lane_lines(img, camera):
-    orig_image_shape = img.shape[:2]
-    rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    
-    '''
-    do color thresh and reverse perspective transform
-    '''
-    warped, M, invM = image_process.undist_thresh_rev_proj(img, camera, debug=False)
-
-
-    '''
-    fit the left and right polynomial lines
-    '''
-    left_lane, right_lane = lane_lines.discover_two_lines(warped)
-
-
-    '''
-    create an image overlay of lines
-    '''
-    newwarp = lane_lines.get_lane_overlay(warped, 
-                left_lane, 
-                right_lane, 
-                invM, 
-                orig_image_shape)
-    
-
-    '''
-    Combine the result with the original image
-    '''
-    result = cv2.addWeighted(rgb, 1, newwarp, 0.3, 0)
-
-    '''
-    write the lane position and curvature over image
-    '''
-    lane_lines.write_lane_info(left_lane, 
-                right_lane,
-                result,
-                warped.shape)
-                
-    
-    return result
-
-def process_test_images():
-    files = glob.glob('test_images/*.jpg')
+def process_test_images(file_mask):
+    files = glob.glob(file_mask)
     camera_pickle_filename = 'camera.pkl'
 
     camera = get_camera(camera_pickle_filename)
@@ -99,12 +106,12 @@ def process_test_images():
 
     for infile in files:
         print('processing', infile)
+
+        line_processor = LineProcessor(camera)
         
         img = cv2.imread(infile)
 
-        result = process_lane_lines(img, camera)
-
-        result = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
+        result = line_processor.process(img)
 
         outfilename = infile.replace('test_images', 'output_images')
 
@@ -130,6 +137,10 @@ def process_movie(infilename, outfilename):
 
 
 
-process_test_images()
+#process_test_images('test_images/*.jpg')
 
-#process_movie("project_video.mp4", "project_video_out.mp4")
+#process_test_images('vid_images/test_images/*.jpg')
+
+process_movie("project_video.mp4", "project_video_out.mp4")
+
+#process_movie("challenge_video.mp4", "challenge_video_out.mp4")
