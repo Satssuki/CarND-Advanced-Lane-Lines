@@ -40,6 +40,7 @@ Video file is available [here](https://github.com/tawnkramer/CarND-Advanced-Lane
 [image14]: ./examples/result_2.png "result_2"
 [image15]: ./examples/result_3.png "result_3"
 [image16]: ./output_images/test3.jpg "lane_info"
+[image17]: ./output_images/sem_seg.png "sem_seg"
 
 ### Source Code
 All source code can be viewed in the python notebook file [AdvancedLaneFinding.ipynb](https://github.com/tawnkramer/CarND-Advanced-Lane-Lines/blob/master/AdvancedLaneFinding.ipynb) or in python source [here](https://github.com/tawnkramer/CarND-Advanced-Lane-Lines/tree/master/src).
@@ -111,9 +112,11 @@ I created a histogram of pixels at each column of the image. Then the two larges
 
 ![alt text][image11a]
 
-This histogram was moved in progressive bounding boxes up the image. The bounding box was adjusted to the center of the detected lane position. This gives it continuity. Here's the example of the binary mask and resulting walk of the image showing the bounding boxes at each step.
+This histogram was moved in progressive bounding boxes up the image. The bounding box was adjusted to the center of the detected lane position. This gives it continuity. When no pixels are found, the box simply advances up. Here's the example of the binary mask and resulting walk of the image showing the bounding boxes at each step.
 
 ![alt text][image11]
+
+Repeated runs can use the existing curves as search region for the next, and don't need to repeat entire image histogram, which can speed results and aid in continuity.
 
 #### 8. Fit Polynomial
 
@@ -138,4 +141,18 @@ The deviation, or lane position, was calculated by using the same pixel to world
 Here's an example showing lane info and curvature overlay:
 
 ![alt text][image16]
+
+### Discussion
+
+The different color spaces each afforded unique information in determining lane line pixels. Ultimately, this technique succeeded only when much time was spent hand-tuning thresholds for the target video, and failed to abstract well to new situations with different lighting conditions, more desaturated lane lines, additional phantom cracks, or extreme lane curvature.
+
+The inverse perspective transform was quite successful at creating a linear space for lane determination, but assumes a level road and needs additional parameters to handle slopes.
+
+I enjoyed creating the custom convolutional kernel, and it was quite powerful at targeting strong image features such as long continuous diagonals. These are the kind of kernels that are learned automatically via deep learning techniques using convolutional layers. I attempted to create a [semantic segmentation artifical neural network](https://github.com/tawnkramer/KerasSemSeg) to detect lane line pixels, but ran out of time. I used [my Unity simulator](https://github.com/tawnkramer/sdsandbox) to create perfectly annotated images. 
+
+![alt text][image17]
+
+I then tried two different approaches to semantic segmentation. These were quite large networks that required enormous amounts of time. I ran these overnight on AWS EC2 K80 P2 Large instances. Each time the resulting image was not segmented at all. Due to time constraints, I will continue this on my own time.
+
+
 
