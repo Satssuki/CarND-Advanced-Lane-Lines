@@ -40,7 +40,7 @@ Video file is available [here](https://github.com/tawnkramer/CarND-Advanced-Lane
 [image14]: ./examples/result_2.png "result_2"
 [image15]: ./examples/result_3.png "result_3"
 [image16]: ./output_images/test3.jpg "lane_info"
-[image17]: ./output_images/sem_seg.png "sem_seg"
+[image17]: ./examples/sem_seg.png "sem_seg"
 
 ### Source Code
 All source code can be viewed in the python notebook file [AdvancedLaneFinding.ipynb](https://github.com/tawnkramer/CarND-Advanced-Lane-Lines/blob/master/AdvancedLaneFinding.ipynb) or in python source [here](https://github.com/tawnkramer/CarND-Advanced-Lane-Lines/tree/master/src).
@@ -152,7 +152,7 @@ I enjoyed creating the custom convolutional kernel, and it was quite powerful at
 
 ![alt text][image17]
 
-I then tried two different approaches to semantic segmentation. These were quite large networks that required enormous amounts of time. I ran these overnight on AWS EC2 K80 P2 Large instances. Each time the resulting image was not segmented at all. Due to time constraints, I will continue this on my own time.
+I then tried two different approaches, [here](https://github.com/shekkizh/FCN.tensorflow) and [here](https://github.com/aurora95/Keras-FCN), to semantic segmentation. These were quite large networks that required enormous amounts of time. I ran these overnight on AWS EC2 K80 P2 Large instances. Each time the resulting image was not segmented at all. Due to time constraints, I will continue this on my own time.
 
 
 
