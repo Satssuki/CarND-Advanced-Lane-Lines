@@ -63,38 +63,44 @@ Example above.
 The source image was converted to HLS, RGB, and YUV color spaces. Various threshold values were hand-tuned to select just a portion of the image that would contribute to finding lane pixels.
 
 ##### HLS Color space example
+The first row shows the result of the color space conversion. The second row shows the resulting mask from selecting pixels at a certain threshold.
 ![alt text][image2]
 ##### RGB Color space example
+The first row shows the result of the color space conversion. The second row shows the resulting mask from selecting pixels at a certain threshold.
 ![alt text][image3]
 ##### YUV Color space example
+The first row shows the result of the color space conversion. The second row shows the resulting mask from selecting pixels at a certain threshold.
 ![alt text][image4]
 
 #### 3. Custom Convolutional Kernel
 
-I developed a custom convolutional kernel to attempt to directly detect diagonal lines. This is derived from the standard Sobel filter for X and Y edge gradients. 
+I developed a custom convolutional kernel to attempt to directly detect right sloping diagonal lines. This is derived from the standard Sobel filter for X and Y edge gradients. The kernel was flipped horizontally to detect left sloping edges.
 ![alt text][image5]
 
+Here are examples of resulting masks:
 ![alt text][image6]
+
+An experiment to use Sobel gradients did not result in useful information, and was ultimately discarded. Here's an example of that filter.
+![alt text][image9]
 
 #### 4. Mask Region of Intrest
 
 A custom polygon was created to exclude pixels outside the road.
-![alt text][image7]
+![alt text][image8]
 
 #### 5. Combined Masks
 
 Individual masks were thresholded to a floating point image where each pixel was either 0 or 0.1. Then the masks were added together and all pixels with two or more contributions were used.
 
-![alt text][image8]
+![alt text][image7]
 
-An experiment to Sobel Gradients did not result in useful information, and was ultimately discarded. Here's an example of that filter.
-![alt text][image9]
+
 
 #### 6. Perspective Transform
 
-A perspective transform was used to rectify the binary image. The attempted to transform pixels in the source image to remove the effects of camera perspective such that parallel lines in the world result in parallel image lines.
+A perspective transform was used to rectify the binary image. This attempts to transform pixels in the source image to remove the effects of camera perspective such that parallel lines in the world result in parallel image lines.
 
-To accomplish this, a custom polygon was chosen which matched the lane lines in the perspective view. Then a second polgon was chosen as the destination space. This was more rectangular, but not perfectly so. The OpenCV function getPerspectiveTransform() was used to calculate the matrix. And OpenCV warpPerspective() was used to apply the matrix to the image.
+To accomplish this, a custom polygon was chosen which matched the lane lines in the perspective view. Then a second polgon was chosen as the destination space. This was more rectangular, but not perfectly so. The OpenCV function `cv2.getPerspectiveTransform()` was used to calculate the matrix. And `cv2.warpPerspective()` was used to apply the matrix to the image.
 
 ![alt text][image10]
 ![alt text][image11]
